@@ -1,13 +1,34 @@
 <!--index.wxml-->
-<view class="container">
-  <view bindtap="bindViewTap" class="userinfo">
-    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+<view class="feature-area">
+  <view class="switch-project">
+    <text class="switch-project-text">北京移动</text>
+    <text class="switch-project-btn">切换</text>
+   </view>
+
+    <view class="search">
+      <image src="../../img/search.png"></image>
+      <input type="text" placeholder="搜索" placeholder-class="search-placeholder"/>
+   </view>
+
+   <view class="scan">
+       <image src="../../img/scan.png"></image>
+   </view>
+
+</view>
+<view class="select-area">
+  <text class="select-area-text hover">出口</text>
+  <text class="select-area-text">机房</text>
+</view>
+
+<view class="container ">
+  <view bindtap="bindViewTap " class="userinfo ">
+    <image class="userinfo-avatar " src="{{userInfo.avatarUrl}} " background-size="cover "></image>
+    <text class="userinfo-nickname ">{{userInfo.nickName}}</text>
   </view>
-  <view class="usermotto" animation="{{animationData}}">
-    <text class="user-motto">{{motto}}</text>
+  <view class="usermotto " animation="{{animationData}} ">
+    <text class="user-motto ">{{motto}}</text>
   </view>
-  <view class="enterBtn">
-    <button bindtap="clickEnter" size="mini" type="primary" plain="true">点击进入</button>
+  <view class="enterBtn ">
+    <button bindtap="clickEnter " size="mini " type="primary " plain="true ">点击进入</button>
   </view>
 </view>
