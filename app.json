@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/logs/logs",
+    "pages/dashboard/dashboard",
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#3366cc",
+    "navigationBarTitleText": "运维助手",
+    "navigationBarTextStyle": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#BEBEBE",
+    "selectedColor": "#3366cc",
+    "backgroundColor": "#F5F5F5",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "img/home.png",
+        "selectedIconPath": "img/home-selected.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "日志",
+        "iconPath": "img/log.png",
+        "selectedIconPath": "img/log-selected.png"
+      }
+    ]
+  }
+}
