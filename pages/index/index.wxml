@@ -1,34 +1,54 @@
 <!--index.wxml-->
+<import src="../common/blockSection.wxml" />
 <view class="feature-area">
-  <view class="switch-project">
-    <text class="switch-project-text">北京移动</text>
+  <view class="switch-project" bindtap="switchProject">
+    <text class="switch-project-text">{{currentProject}}</text>
     <text class="switch-project-btn">切换</text>
-   </view>
+  </view>
 
-    <view class="search">
-      <image src="../../img/search.png"></image>
-      <input type="text" placeholder="搜索" placeholder-class="search-placeholder"/>
-   </view>
+  <view class="search">
+    <image src="../../img/search.png"></image>
+    <input type="text" placeholder="搜索" placeholder-class="search-placeholder" />
+  </view>
 
-   <view class="scan">
-       <image src="../../img/scan.png"></image>
-   </view>
+  <view class="scan" bindtap="scan">
+    <image src="../../img/scan.png"></image>
+  </view>
 
 </view>
 <view class="select-area">
-  <text class="select-area-text hover">出口</text>
-  <text class="select-area-text">机房</text>
+  <view class="select-area-text {{currentTopItem==idx?'active':''}}" wx:for="{{topTabItems}}" wx:key="idx" wx:for-index="idx" bindtap="switchTab" data-idx="{{idx}}">{{item}}</view>
 </view>
 
-<view class="container ">
-  <view bindtap="bindViewTap " class="userinfo ">
-    <image class="userinfo-avatar " src="{{userInfo.avatarUrl}} " background-size="cover "></image>
-    <text class="userinfo-nickname ">{{userInfo.nickName}}</text>
-  </view>
-  <view class="usermotto " animation="{{animationData}} ">
-    <text class="user-motto ">{{motto}}</text>
-  </view>
-  <view class="enterBtn ">
-    <button bindtap="clickEnter " size="mini " type="primary " plain="true ">点击进入</button>
-  </view>
-</view>
+<swiper class="swiper" current="{{currentTopItem}}" bindchange="bindChange" duration="300" style="height:{{swiperHeight}}px">
+  <swiper-item>
+    <scroll-view class="scroll-view" scroll-y="true">
+      <block wx:for="{{envList}}" wx:key="id" wx:for-item="item">
+        <navigator url="/pages/env/env?id={{item.id}}">
+          <template is="blockSection" data="{{item}}" />
+        </navigator>
+      </block>
+    </scroll-view>
+  </swiper-item>
+  <swiper-item>
+    <block wx:for="{{idcList}}" wx:key="id" wx:for-item="item">
+      <navigator url="/pages/idc/idc?id={{item.id}}">
+        <template is="blockSection" data="{{item}}" />
+      </navigator>
+    </block>
+  </swiper-item>
+</swiper>
+<action-sheet hidden="{{actionSheetHidden}}" bindchange="actionSheetChange">
+  <scroll-view class="project-scroll-view" scroll-y="true">
+    <block wx:for="{{projectList}}" wx:key="idx" wx:for-item="item" >
+      <action-sheet-item class="item" data-project="{{item}}" bindtap="chooseProject">
+        <icon type="success" size="20" wx:if="{{currentProject==item}}"></icon>
+        {{item}}
+      </action-sheet-item>
+    </block>
+  </scroll-view>
+  <action-sheet-cancel class="cancel">取消</action-sheet-cancel>
+</action-sheet>
+<modal title="扫码结果" confirm-text="确认" cancel-text="返回" hidden="{{modalHidden}}" bindconfirm="confirm" bindcancel="cancelScan">
+{{scanResult}}
+</modal>

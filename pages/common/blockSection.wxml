@@ -1,0 +1,16 @@
+<!--blockSection.wxml-->
+<template name="blockSection">
+  <view class="main-section">
+    <view class="main-section-image">
+      <image src="{{item.avator}}"></image>
+    </view>
+    <view class="main-section-text">
+      <text class="main-section-title">
+        {{item.name}}
+      </text>
+      <text class="main-section-attr">
+        {{item.attr}}
+      </text>
+    </view>
+  </view>
+</template>

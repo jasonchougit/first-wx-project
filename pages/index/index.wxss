@@ -1,5 +1,5 @@
 /**index.wxss**/
-
+@import "../common/blockSection.wxss";
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -80,6 +80,9 @@
   color:#8CCEFD;
   line-height: 20rpx;
 }
+.scan{
+  margin-top:10rpx;
+}
 
 .scan image {
   color:#ffffff;
@@ -101,13 +104,27 @@
   text-align: center;
   color: #aaa;
   width:50%;
-  height:100%;
-  padding-top:30rpx;
-  margin-bottom: 20rpx;
+  height: 78rpx;
+  line-height: 78rpx;
 }
 
-.select-area-text:hover {
+.select-area-text.active {
   color:#3366cc;
   border-bottom: 4rpx solid #3366cc;
 }
 
+.swiper {
+  display: block;
+  width:100%;
+  overflow: hidden;
+  margin-top: 10rpx;
+}
+
+.project-scroll-view {
+  max-height: 250rpx;
+}
+
+.cancel {
+  background-color: #3366cc;
+  color:#ffffff;
+}
