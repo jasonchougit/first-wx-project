@@ -13,7 +13,7 @@ Page({
     projectList: [],
     modalHidden: true,
     scanResult: '',
-    serialNumber:''
+    serialNumber: ''
   },
   //切换顶部标签
   switchTab: function (e) {
@@ -69,29 +69,34 @@ Page({
         id: 1,
         name: '缓存出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png'
+        avator: '../../img/signal.png',
+        alarmNum:7
       }, {
         id: 2,
         name: 'IDC出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png'
+        avator: '../../img/signal.png',
+        alarmNum:13
       }, {
         id: 3,
         name: '省内出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png'
+        avator: '../../img/signal.png',
+        alarmNum:'...'
       },
       {
         id: 4,
         name: '城域网出口',
         attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png'
+        avator: '../../img/signal.png',
+        alarmNum:12
       }],
       idcList: [{
         id: 0,
         name: '望京机房',
         attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/idc.png'
+        avator: '../../img/idc.png',
+        alarmNum:3
       }]
     })
   },
@@ -151,9 +156,9 @@ Page({
     wx.scanCode({
       onlyFromCamera: true,
       success: function (res) {
-        that.dealScanResult(res.result); 
+        that.dealScanResult(res.result);
       },
-      fail: function (res) { 
+      fail: function (res) {
         that.setData({
           modalHidden: false,
           scanResult: '扫码失败'
@@ -163,37 +168,39 @@ Page({
     })
   },
   //确认扫码结果
-  confirm: function(){
+  confirm: function () {
     var that = this;
     that.setData({
-      modalHidden:true
+      modalHidden: true
     });
-    wx.navigateTo({
-      url: '/pages/equipment/equipment-add?serial_number='+that.data.serialNumber,
-    })
   },
-  cancelScan: function(){
+  cancelScan: function () {
     var that = this;
     that.setData({
       modalHidden: true
     })
   },
-  
-  dealScanResult: function(result){
-    var that = this;
-    if (that.judgeSerialNumberExist(result)){
 
-    }else{
+  dealScanResult: function (result) {
+    var that = this;
+    if (that.judgeSerialNumberExist(result)) {
+      that.setData({
+        modalHidden: true
+      });
+      wx.navigateTo({
+        url: '/pages/equipment/server?serial_number=' + result,
+      })
+    } else {
       that.setData({
         modalHidden: false,
-        scanResult: "设备序列号："+result+"不存在，是否需要添加该设备？",
-        serialNumber:result
+        scanResult: "设备序列号：" + result + "不存在，请联系发货管理员进行添加",
+        serialNumber: result
       })
-    }   
+    }
   },
   //判断扫描到设备序列号是否存在
-  judgeSerialNumberExist: function(result){
-    return false;
+  judgeSerialNumberExist: function (result) {
+    return true;
   }
 
 })

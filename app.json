@@ -8,7 +8,8 @@
     "pages/common/blockSection",
     "pages/env/env",
     "pages/idc/idc",
-    "pages/equipment/equipment-add"
+    "pages/equipment/equipment-add",
+    "pages/equipment/server"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -10,10 +10,15 @@
   margin:12rpx 12rpx 10rpx 10rpx;
   background-color: white;
 }
+.main-section-image {
+  display:flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
 .main-section-image image{
-  width:70rpx;
-  height: 70rpx;
-  padding:15rpx 15rpx 15rpx 15rpx
+  width:90rpx;
+  height: 90rpx;
+  padding:15rpx 15rpx 15rpx 15rpx;
 }
 
 .main-section-text {
@@ -34,4 +39,17 @@
   font-size:30rpx;
   color:#aaa;
   margin-bottom: 30rpx;
+}
+
+.main-section-badge {
+  height: 30rpx;
+  min-width: 30rpx;
+  font-size: 10px;
+  text-align: center;
+  display: inline-block;
+  background-color: red;
+  border-radius: 50%;
+  color: #ffffff;
+  padding:5rpx;
+  margin-left:-25rpx;
 }

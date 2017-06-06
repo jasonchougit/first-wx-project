@@ -62,5 +62,11 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+
+  redirectToServer: function(){
+    wx.redirectTo({
+      url: '/pages/equipment/server?serial_number=abc',
+    })
   }
 })
