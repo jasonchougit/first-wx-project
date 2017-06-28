@@ -77,7 +77,7 @@ Page({
         ringChart.stopAnimation();
       }, 500);
     })
-    
+    this.drawTrafficLineChart(windowWidth);
   },
 
   /**
@@ -175,5 +175,61 @@ Page({
           errNum: 10
       }]
     })
+  },
+  createSimulationData: function () {
+    var categories = [];
+    var data = [];
+    for (var i = 0; i < 10; i++) {
+      categories.push('2016-' + (i + 1));
+      data.push(Math.random() * (20 - 10) + 10);
+    }
+    // data[4] = null;
+    return {
+      categories: categories,
+      data: data
+    }
+  },
+  drawTrafficLineChart:function(width){
+    var simulationData = this.createSimulationData();
+    var lineChart = new wxCharts({
+      animation: true,
+      type:'line',
+      canvasId: 'trafficLineChart',
+      categories: simulationData.categories,
+      background: '#f5f5f5',
+      series: [{
+        name: '成交量1',
+        data: simulationData.data,
+        format: function (val, name) {
+          return val.toFixed(2) + '万';
+        }
+      }, {
+        name: '成交量2',
+        data: [2, 0, 0, 3, null, 4, 0, 0, 2, 0],
+        format: function (val, name) {
+          return val.toFixed(2) + '万';
+        }
+      }],
+      xAxis: {
+        disableGrid: true
+      },
+      yAxis: {
+        title: '成交金额 (万元)',
+        format: function (val) {
+          return val.toFixed(2);
+        },
+        min: 0
+      },
+      width: width-20,
+      height: 200,
+      legend: true,
+      dataLabel: false,
+      dataPointShape: true,
+      extra: {
+        legendTextColor:'#7cb5ec',
+        lineStyle: 'curve'
+      }
+    });
+    console.log(lineChart);
   }
 })
