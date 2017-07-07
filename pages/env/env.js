@@ -1,5 +1,6 @@
 // env.js
 var wxCharts = require('../../utils/wxcharts-min.js')
+// var echarts = require('../../utils/echarts.min.js')
 var util = require('../../utils/util.js')
 Page({
 
@@ -9,7 +10,10 @@ Page({
   data: {
     totalBandWidth:0,
     bandWidthUnit:'bps',
-    allIndexes:[]
+    allIndexes:[],
+    topTabItems:['服务器','探针','分流平台','交换机'],
+    currentTopItem:0,
+    equipmentList:[]
   },
 
   /**
@@ -24,6 +28,7 @@ Page({
     })
     this.getShownData();
     this.getAllIndexes();
+    this.getEquipmentList();
   },
 
   /**
@@ -78,6 +83,7 @@ Page({
       }, 500);
     })
     this.drawTrafficLineChart(windowWidth);
+    // this.drawTopology();
   },
 
   /**
@@ -122,9 +128,11 @@ Page({
   
   },
 
-  redirectToServer: function(){
+  redirectToServer: function(e){
+    console.log(e);
+    var serialNumber = e.currentTarget.dataset.equipment.serialNumber;
     wx.redirectTo({
-      url: '/pages/equipment/server?serial_number=abc',
+      url: '/pages/equipment/server?serial_number='+serialNumber,
     })
   },
 
@@ -178,15 +186,18 @@ Page({
   },
   createSimulationData: function () {
     var categories = [];
-    var data = [];
+    var upTraffic = [];
+    var downTraffic = [];
     for (var i = 0; i < 10; i++) {
       categories.push('2016-' + (i + 1));
-      data.push(Math.random() * (20 - 10) + 10);
+      upTraffic.push(Math.random() * (20 - 10) + 10);
+      downTraffic.push(Math.random() * (20 - 10) + 10);
     }
     // data[4] = null;
     return {
       categories: categories,
-      data: data
+      upTraffic: upTraffic,
+      downTraffic: downTraffic
     }
   },
   drawTrafficLineChart:function(width){
@@ -198,25 +209,24 @@ Page({
       categories: simulationData.categories,
       background: '#f5f5f5',
       series: [{
-        name: '成交量1',
-        data: simulationData.data,
+        name: '上行流量',
+        data: simulationData.upTraffic,
         format: function (val, name) {
-          return val.toFixed(2) + '万';
+          return val.toFixed(2) + 'Gbps';
         }
       }, {
-        name: '成交量2',
-        data: [2, 0, 0, 3, null, 4, 0, 0, 2, 0],
+        name: '下行流量',
+        data: simulationData.downTraffic,
         format: function (val, name) {
-          return val.toFixed(2) + '万';
+          return val.toFixed(2) + 'Gbps';
         }
       }],
       xAxis: {
         disableGrid: true
       },
       yAxis: {
-        title: '成交金额 (万元)',
         format: function (val) {
-          return val.toFixed(2);
+          return val+'Gbps';
         },
         min: 0
       },
@@ -231,5 +241,49 @@ Page({
       }
     });
     console.log(lineChart);
+  },
+
+  drawTopology: function(){
+    var myChart = echarts.init(document.getElementById('topology'));
+    var option = {
+      title: {
+        text: 'ECharts 入门示例'
+      },
+      tooltip: {},
+      legend: {
+        data: ['销量']
+      },
+      xAxis: {
+        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      yAxis: {},
+      series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+      }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+  },
+  switchTab:function(e){
+    this.setData({
+      currentTopItem: e.currentTarget.dataset.idx
+    });
+    this.getEquipmentList();
+  },
+  getEquipmentList: function(){
+    this.setData({
+      equipmentList:[{
+        serialNumber:'ABCDEFG',
+        ip:'192.168.80.5',
+        status:'ERR'
+      },{
+          serialNumber: 'fajkdsofa',
+          ip: '192.168.80.32',
+          status: 'OK'
+      }]
+    })
   }
 })
