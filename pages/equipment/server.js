@@ -26,78 +26,11 @@ Page({
     var serverItem = this.getServerInfo(serialNumber);
 
     var attrList = this.refreshAttrList(serverItem);
-    var statusList = [{
-      id: 31,
-      name: '在用'
-    }, {
-      id: 32,
-      name: '待用'
-    }, {
-      id: 33,
-      name: '下线'
-    }];
-    statusList.map(function (d) {
-      d.checked = serverItem.status === d.name ? true : false;
-    })
 
-    var idcList = [{
-      id: 11,
-      name: '芳村机房'
-    },{
-      id: 12,
-      name: '三水机房'
-    }];
-    idcList.map(function (d) {
-      d.checked = serverItem.idcName === d.name ? true : false;
-    })
-
-    var rackList = [{
-      id: 21,
-      name: '1号机架'
-    },{
-      id: 22,
-      name: '2号机架'
-    }];
-    rackList.map(function (d) {
-      d.checked = serverItem.rack === d.name ? true : false;
-    })
-
-    var envList = [{
-      id: 0,
-      name: '省网'
-    },{
-      id: 1,
-      name: 'IDC'
-    },{
-      id: 2,
-      name: '缓存出口'
-    }];
-    envList.map(function (d) {
-      d.checked = serverItem.envName === d.name ? true : false;
-    })
-
-    var roleList = [{
-      id: 41,
-      name: '采集服务器'
-    },{
-      id: 42,
-      name: 'NameNode'
-    },{
-      id: 43,
-      name: 'DataNode'
-    }];
-    roleList.map(function (d) {
-      d.checked = serverItem.role === d.name ? true : false;
-    })
     this.setData({
       serialNumber: serialNumber,
       ipAddr: serverItem.ipAddr,
       attrList: attrList,
-      statusList: statusList,
-      idcList: idcList,
-      rackList: rackList,
-      envList: envList,
-      roleList: roleList,
       curServerItem: serverItem
     })
     //console.log(idcList[0].id);
@@ -192,11 +125,83 @@ Page({
   },
 
   clickToEdit: function (e) {
+    var that = this;
+    var serverItem = that.data.curServerItem;
+    var statusList = [{
+      id: 31,
+      name: '在用'
+    }, {
+      id: 32,
+      name: '待用'
+    }, {
+      id: 33,
+      name: '下线'
+    }];
+    statusList.map(function (d) {
+      d.checked = serverItem.status === d.name ? true : false;
+    })
+
+    var idcList = [{
+      id: 11,
+      name: '芳村机房'
+    }, {
+      id: 12,
+      name: '三水机房'
+    }];
+    idcList.map(function (d) {
+      d.checked = serverItem.idcName === d.name ? true : false;
+    })
+
+    var rackList = [{
+      id: 21,
+      name: '1号机架'
+    }, {
+      id: 22,
+      name: '2号机架'
+    }];
+    rackList.map(function (d) {
+      d.checked = serverItem.rack === d.name ? true : false;
+    })
+
+    var envList = [{
+      id: 0,
+      name: '省网'
+    }, {
+      id: 1,
+      name: 'IDC'
+    }, {
+      id: 2,
+      name: '缓存出口'
+    }];
+    envList.map(function (d) {
+      d.checked = serverItem.envName === d.name ? true : false;
+    })
+
+    var roleList = [{
+      id: 41,
+      name: '采集服务器'
+    }, {
+      id: 42,
+      name: 'NameNode'
+    }, {
+      id: 43,
+      name: 'DataNode'
+    }];
+    roleList.map(function (d) {
+      d.checked = serverItem.role === d.name ? true : false;
+    });
+    this.setData({
+      statusList: statusList,
+      idcList: idcList,
+      rackList: rackList,
+      envList: envList,
+      roleList: roleList
+    })
     var c = [];
     c = e.currentTarget.dataset.item.List;
     //var f=c === 'envList' ? true : false;
     //console.log(f);
-    if (c === 'envList'){
+    if (c === 'envList') {
       this.setData({
         modalTitle: '选择' + e.currentTarget.dataset.item.key,
         modalHidden: false,
@@ -204,7 +209,7 @@ Page({
         checkboxHidden: false,
         modalList: this.data[c]
       })
-    }else{
+    } else {
       this.setData({
         modalTitle: '选择' + e.currentTarget.dataset.item.key,
         modalHidden: false,
@@ -213,7 +218,7 @@ Page({
         modalList: this.data[c]
       })
     }
-    
+
   },
 
   confirm: function () {
@@ -283,24 +288,24 @@ Page({
   /**
    * 多选框选择操作
    */
-  checkboxgroupBindchange: function(e){
+  checkboxgroupBindchange: function (e) {
     var that = this;
     var temp1 = e.detail.value
     //console.log(this)
     var temp2 = ''
-    
-    if (temp1.length!=0){
-      if (temp1.length<3){
-        for (var i = 0, len = temp1.length; i < len; i++){
-          temp2 = temp2 + this.data.envList[temp1[i]].name+'  '
+
+    if (temp1.length != 0) {
+      if (temp1.length < 3) {
+        for (var i = 0, len = temp1.length; i < len; i++) {
+          temp2 = temp2 + this.data.envList[temp1[i]].name + '  '
         }
         that.data.curServerItem.envName = temp2;
-        
-      }else{
+
+      } else {
         temp2 = temp2 + this.data.envList[temp1[0]].name + '  ' + this.data.envList[temp1[1]].name + '等'
         that.data.curServerItem.envName = temp2;
       }
-    }else{
+    } else {
       that.data.curServerItem.envName = '';
     }
   }

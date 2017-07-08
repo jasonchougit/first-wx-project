@@ -13,7 +13,8 @@ Page({
     allIndexes:[],
     topTabItems:['服务器','探针','分流平台','交换机'],
     currentTopItem:0,
-    equipmentList:[]
+    equipmentList:[],
+    swiperHeight:0
   },
 
   /**
@@ -35,6 +36,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+    var that = this;
     var windowWidth = 320;
     try{
       var res = wx.getSystemInfoSync();
@@ -42,8 +44,7 @@ Page({
     }catch(e){
       console.error("get system info sync error!")
     }
-    console.log(this.data);
-    this.data.allIndexes.forEach(function(item){
+    that.data.allIndexes.forEach(function(item){
       console.log(item);
       var ringChart = new wxCharts({
         animation: true,
@@ -82,8 +83,15 @@ Page({
         ringChart.stopAnimation();
       }, 500);
     })
-    this.drawTrafficLineChart(windowWidth);
-    // this.drawTopology();
+    that.drawTrafficLineChart(windowWidth);
+    wx.getSystemInfo({
+      success: function (res) {
+        console.log(res);
+        that.setData({
+          swiperHeight: (res.windowHeight - 37)
+        });
+      }
+    })
   },
 
   /**
@@ -131,7 +139,7 @@ Page({
   redirectToServer: function(e){
     console.log(e);
     var serialNumber = e.currentTarget.dataset.equipment.serialNumber;
-    wx.redirectTo({
+    wx.navigateTo({
       url: '/pages/equipment/server?serial_number='+serialNumber,
     })
   },
@@ -242,31 +250,7 @@ Page({
     });
     console.log(lineChart);
   },
-
-  drawTopology: function(){
-    var myChart = echarts.init(document.getElementById('topology'));
-    var option = {
-      title: {
-        text: 'ECharts 入门示例'
-      },
-      tooltip: {},
-      legend: {
-        data: ['销量']
-      },
-      xAxis: {
-        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-      },
-      yAxis: {},
-      series: [{
-        name: '销量',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
-      }]
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-  },
+  
   switchTab:function(e){
     this.setData({
       currentTopItem: e.currentTarget.dataset.idx
@@ -274,16 +258,33 @@ Page({
     this.getEquipmentList();
   },
   getEquipmentList: function(){
-    this.setData({
-      equipmentList:[{
-        serialNumber:'ABCDEFG',
-        ip:'192.168.80.5',
-        status:'ERR'
-      },{
-          serialNumber: 'fajkdsofa',
-          ip: '192.168.80.32',
-          status: 'OK'
-      }]
+    var mockEquipmentList = [];
+    for(var i=0;i<10;i++){
+      var mockItem = {};
+      mockItem.ip = '192.168.1.'+Math.floor(Math.random()*254+1);
+      mockItem.serialNumber = util.getRandomStr(8);
+      mockItem.status = Math.random()>0.5?'OK':'ERR';
+      mockItem.info = mockItem.status=='ERR'?'失去连接':''
+      mockEquipmentList.push(mockItem); 
+    }
+    console.log(mockEquipmentList);
+    mockEquipmentList.sort(function(a,b){
+      if(a.status == 'ERR'){
+        return -1;
+      }else{
+        return 1;
+      }
     })
+    console.log(mockEquipmentList);
+    this.setData({
+      equipmentList:mockEquipmentList
+    })
+  },
+  bindChange: function (e) {
+    var that = this;
+    that.setData({
+      currentTopItem: e.detail.current
+    })
+    that.getEquipmentList();
   }
 })

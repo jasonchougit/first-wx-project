@@ -44,8 +44,15 @@ function transformUnit(traffic) {
     };
   }
 }
+/**
+ * 获得指定长度的随机字符串
+ */
+function getRandomStr(len){
+    return Math.random().toString(36).substr(2,2+len);
+}
 
 module.exports = {
   formatTime: formatTime,
-  transformUnit: transformUnit
+  transformUnit: transformUnit,
+  getRandomStr: getRandomStr
 }
