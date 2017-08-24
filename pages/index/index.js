@@ -51,6 +51,18 @@ Page({
   onLoad: function () {
     console.log('onLoad')
     var that = this
+    wx.request({
+  url:'https://pmweb.haohandata.com:8181/pmweb/api/project_group',
+      header:{
+        "Content-Type":"application/json"
+      },
+      success:function(data){
+        console.log(data);
+      },
+      fail:function(){
+        console.log('error');
+      }
+    })
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function (userInfo) {
       //更新数据
