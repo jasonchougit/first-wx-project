@@ -103,15 +103,7 @@ Page({
         method: 'POST',
         success: function (res) {
           if(res.statusCode === 200){
-            console.log(res);
-            wx.request({
-              url:'https://pmweb.haohandata.com:8181/pmweb/api/account/current_user',
-              method:'GET',
-              success:function(res){
-                console.log(res);
-              }
-            })
-            wx.switchTab({
+            wx.setStorageSync('JSESSIONID', res.data.sessionId);                    wx.switchTab({
               url: '/pages/index/index'
             })         
           }else{

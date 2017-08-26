@@ -13,7 +13,8 @@ Page({
     projectList: [],
     modalHidden: true,
     scanResult: '',
-    serialNumber: ''
+    serialNumber: '',
+    sessionId: ''
   },
   //切换顶部标签
   switchTab: function (e) {
@@ -50,11 +51,16 @@ Page({
   },
   onLoad: function () {
     console.log('onLoad')
-    var that = this
+    var that = this;
+    var sessionId = wx.getStorageSync('JSESSIONID');
+    that.setData({
+       sessionId:sessionId
+    })
     wx.request({
   url:'https://pmweb.haohandata.com:8181/pmweb/api/project_group',
       header:{
-        "Content-Type":"application/json"
+        "Content-Type":"application/json",
+        "Cookie":"JSESSIONID="+sessionId
       },
       success:function(data){
         console.log(data);
