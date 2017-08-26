@@ -1,11 +1,11 @@
 {
   "pages": [
     "pages/login/login",
-    "pages/alarm/alarm",
-    "pages/logs/logs",
     "pages/index/index",
-    "pages/project/project",
+    "pages/alarm/alarm",
     "pages/profile/profile",
+    "pages/logs/logs",
+    "pages/project/project",
     "pages/common/blockSection",
     "pages/env/env",
     "pages/idc/idc",
