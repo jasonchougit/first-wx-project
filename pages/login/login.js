@@ -111,7 +111,7 @@ Page({
           }
         },
         fail: function (res) {
-          console.log(res.data);
+          console.log(res);
           that.handleError('请求错误');
         }
       })

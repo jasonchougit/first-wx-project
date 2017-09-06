@@ -8,7 +8,7 @@ Page({
     envList: [],
     idcList: [],
     swiperHeight: "0",
-    currentProject: "北京移动",
+    currentProject: {},
     actionSheetHidden: true,
     projectList: [],
     modalHidden: true,
@@ -38,37 +38,25 @@ Page({
       currentProject: e.currentTarget.dataset.project,
       actionSheetHidden: !that.data.actionSheetHidden
     });
-    that.refreshPageData(e.currentTarget.dataset.project);
-
+    that.getEnvList(e.currentTarget.dataset.project.id);
+    that.getIdcList(e.currentTarget.dataset.project.id);
   },
   //左右滑动切换出口-机房
   bindChange: function (e) {
     var that = this;
-    console.log(e);
     that.setData({
       currentTopItem: e.detail.current
-    })
+    });
+    if(that.data.currentTopItem == 0){
+      that.getEnvList(that.data.currentProject.id);
+    }else{
+      that.getIdcList(that.data.currentProject.id);
+    }
   },
   onLoad: function () {
     console.log('onLoad')
     var that = this;
-    var sessionId = wx.getStorageSync('JSESSIONID');
-    that.setData({
-       sessionId:sessionId
-    })
-    wx.request({
-  url:'https://pmweb.haohandata.com:8181/pmweb/api/project_group',
-      header:{
-        "Content-Type":"application/json",
-        "Cookie":"JSESSIONID="+sessionId
-      },
-      success:function(data){
-        console.log(data);
-      },
-      fail:function(){
-        console.log('error');
-      }
-    })
+
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function (userInfo) {
       //更新数据
@@ -77,46 +65,7 @@ Page({
       })
     }),
       that.getProjectList();
-    that.setData({
-      envList: [{
-        id: 0,
-        name: '省网出口',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png'
-      }, {
-        id: 1,
-        name: '缓存出口',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png',
-        alarmNum:7
-      }, {
-        id: 2,
-        name: 'IDC出口',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png',
-        alarmNum:13
-      }, {
-        id: 3,
-        name: '省内出口',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png',
-        alarmNum:'...'
-      },
-      {
-        id: 4,
-        name: '城域网出口',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/signal.png',
-        alarmNum:12
-      }],
-      idcList: [{
-        id: 0,
-        name: '望京机房',
-        attr: '服务器：15台，探针：10台，交换机：3台',
-        avator: '../../img/idc.png',
-        alarmNum:3
-      }]
-    })
+
   },
   onShow: function () {
     var animation = wx.createAnimation({
@@ -131,28 +80,34 @@ Page({
     })
   },
   onReady: function () {
-    var that = this;
-    wx.getSystemInfo({
-      success: function (res) {
-        console.log(res);
-        that.setData({
-          swiperHeight: (res.windowHeight - 37)
-        });
-      }
-    })
+
   },
   getProjectList: function () {
     var that = this;
-    that.setData({
-      projectList: [
-        "北京移动",
-        "北京联通",
-        "北京电信",
-        "广东移动",
-        "广东联通",
-        "辽宁移动",
-        "辽宁联通"
-      ]
+    var sessionId = wx.getStorageSync('JSESSIONID');
+    var currentProject = {};
+    wx.request({
+      url: 'https://pmweb.haohandata.com:8181/pmweb/api/project_group',
+      header: {
+        "Content-Type": "application/json",
+        "Cookie": "JSESSIONID=" + sessionId
+      },
+      success: function (res) {
+        var projectList = res.data;
+        if (projectList.length > 0) {
+          currentProject = projectList[0];
+        }
+        that.setData({
+          sessionId: sessionId,
+          projectList: projectList,
+          currentProject: currentProject
+        })
+        that.getEnvList(currentProject.id);
+        // that.getIdcList(currentProject.id);
+      },
+      fail: function () {
+        console.log('error');
+      }
     })
   },
   //下拉选择项目中的取消按钮功能
@@ -163,10 +118,6 @@ Page({
     })
   },
 
-  //根据选择项目组刷新页面数据
-  refreshPageData: function (projectName) {
-    console.log(projectName);
-  },
 
   //扫描二维码或条形码
   scan: function () {
@@ -219,6 +170,118 @@ Page({
   //判断扫描到设备序列号是否存在
   judgeSerialNumberExist: function (result) {
     return true;
+  },
+
+  //根据项目组ID获取链路环境列表
+  getEnvList: function (projectGroupId) {
+    console.log(projectGroupId);
+    var that = this;
+    wx.request({
+      url: 'https://pmweb.haohandata.com:8181/pmweb/api/projectlink',
+      data: {
+        project_id: projectGroupId
+      },
+      header: {
+        "Content-Type": "application/json",
+        "Cookie": "JSESSIONID=" + that.data.sessionId
+      },
+      success: function (res) {
+        var envList = res.data.map(function (d) {
+          d.id = d.projectLinkId;
+          d.name = d.typeName;
+          if (d.typeNumList) {
+            var serverNum = 0;
+            var tmaNum = 0;
+            var switchNum = 0;
+            d.typeNumList.forEach(function (e) {
+              if (e.typeName === '服务器') {
+                serverNum = e.num;
+              }
+              if (e.typeName === 'TMA-SSS') {
+                tmaNum = e.num;
+              }
+              if (e.typeName === '交换机') {
+                switchNum = e.num;
+              }
+            });
+            d.attr = '服务器数：' + serverNum + '，探针数：' + tmaNum + '，交换机数：' + switchNum;
+          } else {
+            d.attr = '设备数：0'
+          }
+          d.avator = '../../img/signal.png';
+          d.alarmNum = 2;
+          return d;
+        });
+        console.log(envList);
+        that.setData({
+          envList: envList,
+          swiperHeight: envList.length * 80 + 50
+        })
+      },
+      fail: function () {
+        console.log('error');
+      }
+    })
+  },
+  /**
+   * 根据项目组ID获取机房列表
+   */
+  getIdcList: function (projectGroupId) {
+    console.log(projectGroupId);
+    var that = this;
+    wx.request({
+      url: 'https://pmweb.haohandata.com:8181/pmweb/api/idc/equipment',
+      data: {
+        project_id: projectGroupId
+      },
+      header: {
+        "Content-Type": "application/json",
+        "Cookie": "JSESSIONID=" + that.data.sessionId
+      },
+      success: function (res) {
+        console.log(res.data);
+        var idcList = res.data.map(function (idc) {
+          if (idc.idcId) {
+            idc.id = idc.idcId;
+            idc.name = idc.idcName;
+          } else {
+            idc.id = 0;
+            idc.name = '未设置';
+          }
+          if (idc.typeNumList) {
+            var serverNum = 0;
+            var tmaNum = 0;
+            var switchNum = 0;
+            idc.typeNumList.forEach(function (e) {
+              if (e.typeName === '服务器') {
+                serverNum = e.num;
+              }
+              if (e.typeName === 'TMA-SSS') {
+                tmaNum = e.num;
+              }
+              if (e.typeName === '交换机') {
+                switchNum = e.num;
+              }
+            });
+            idc.attr = '服务器数：' + serverNum + '，探针数：' + tmaNum + '，交换机数：' + switchNum;
+          } else {
+            idc.attr = '设备数：0'
+          }
+          idc.avator = '../../img/idc.png';
+          idc.alarmNum = 3;
+          return idc;
+        })
+        that.setData({
+          idcList: idcList,
+          swiperHeight: idcList.length * 80 + 50
+        })
+      },
+      fail: function () {
+        console.log('error');
+      }
+    })
   }
+
+
 
 })
