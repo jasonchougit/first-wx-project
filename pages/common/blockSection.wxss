@@ -5,7 +5,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  height:160rpx;
+  min-height:160rpx;
   border-bottom:1rpx solid #dddcdc;  
   margin:12rpx 12rpx 10rpx 10rpx;
   background-color: white;

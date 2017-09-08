@@ -29,10 +29,16 @@
   </view>
 </view>
 <modal title="{{modalTitle}}" confirm-text="确认" cancel-text="取消" hidden="{{modalHidden}}" bindconfirm="confirm" bindcancel="cancel">
-    <radio-group class="radio-group" bindchange="radioChange">
-    <label class="radio" wx:for="{{statusList}}" wx:key="id" wx:for-item="status">
+    <radio-group class="radio-group" bindchange="radioChange" hidden="{{radioHidden}}">
+    <label class="radio" wx:for="{{modalList}}" wx:key="id" wx:for-item="status">
       <radio value="{{status.id}}" checked="{{status.checked}}"></radio>
       {{status.name}}
     </label>
     </radio-group>
+    <checkbox-group class="radio-group" bindchange="checkboxgroupBindchange" hidden="{{checkboxHidden}}">
+    <label class="radio" wx:for="{{modalList}}" wx:key="id" wx:for-item="status">
+      <checkbox value="{{status.id}}" checked="{{status.checked}}"></checkbox>
+      {{status.name}}
+    </label>
+    </checkbox-group>
 </modal>

@@ -2,7 +2,7 @@
 <import src="../common/blockSection.wxml" />
 <view class="feature-area">
   <view class="switch-project" bindtap="switchProject">
-    <text class="switch-project-text">{{currentProject}}</text>
+    <text class="switch-project-text">{{currentProject.name}}</text>
     <text class="switch-project-btn">切换</text>
   </view>
 
@@ -22,13 +22,13 @@
 
 <swiper class="swiper" current="{{currentTopItem}}" bindchange="bindChange" duration="300" style="height:{{swiperHeight}}px">
   <swiper-item>
-    <scroll-view class="scroll-view" scroll-y="true">
+    <!-- <scroll-view class="scroll-view" scroll-y="true"> -->
       <block wx:for="{{envList}}" wx:key="id" wx:for-item="item">
         <navigator url="/pages/env/env?id={{item.id}}">
           <template is="blockSection" data="{{item}}" />
         </navigator>
       </block>
-    </scroll-view>
+    <!-- </scroll-view> -->
   </swiper-item>
   <swiper-item>
     <block wx:for="{{idcList}}" wx:key="id" wx:for-item="item">
@@ -42,8 +42,8 @@
   <scroll-view class="project-scroll-view" scroll-y="true">
     <block wx:for="{{projectList}}" wx:key="idx" wx:for-item="item" >
       <action-sheet-item class="item" data-project="{{item}}" bindtap="chooseProject">
-        <icon type="success" size="20" wx:if="{{currentProject==item}}"></icon>
-        {{item}}
+        <icon type="success" size="20" wx:if="{{currentProject.name==item.name}}"></icon>
+        {{item.name}}
       </action-sheet-item>
     </block>
   </scroll-view>
