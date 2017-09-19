@@ -1,6 +1,7 @@
 //index.js
 //获取应用实例
 var app = getApp()
+var config = require('../../config.js')
 Page({
   data: {
     topTabItems: ['出口', '机房'],
@@ -86,8 +87,9 @@ Page({
     var that = this;
     var sessionId = wx.getStorageSync('JSESSIONID');
     var currentProject = {};
+    var api = config.getPmHost()+config.getPmApiList().PROJECT_GROUP;
     wx.request({
-      url: 'https://pmweb.haohandata.com:8181/pmweb/api/project_group',
+      url: api,
       header: {
         "Content-Type": "application/json",
         "Cookie": "JSESSIONID=" + sessionId
@@ -176,8 +178,9 @@ Page({
   getEnvList: function (projectGroupId) {
     console.log(projectGroupId);
     var that = this;
+    var api = config.getPmHost() + config.getPmApiList().PROJECT_LINK;
     wx.request({
-      url: 'https://pmweb.haohandata.com:8181/pmweb/api/projectlink',
+      url: api,
       data: {
         project_id: projectGroupId
       },
@@ -229,8 +232,9 @@ Page({
   getIdcList: function (projectGroupId) {
     console.log(projectGroupId);
     var that = this;
+    var api = config.getPmHost()+config.getPmApiList().IDC_EQUIPMENT;
     wx.request({
-      url: 'https://pmweb.haohandata.com:8181/pmweb/api/idc/equipment',
+      url: api,
       data: {
         project_id: projectGroupId
       },
