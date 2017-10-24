@@ -34,6 +34,9 @@ Page({
   chooseProject: function (e) {
     console.log(e);
     var that = this;
+
+    app.globalData.currentProjectId = e.currentTarget.dataset.project.id;
+    //console.log("currentProjectId"+app.globalData.currentProjectId);
     that.setData({
       currentProject: e.currentTarget.dataset.project,
       actionSheetHidden: !that.data.actionSheetHidden
@@ -96,6 +99,9 @@ Page({
         var projectList = res.data;
         if (projectList.length > 0) {
           currentProject = projectList[0];
+          app.globalData.currentProjectId = currentProject.id;
+          // console.log("4444");
+          // console.log(app.globalData.currentProjectId);
         }
         that.setData({
           sessionId: sessionId,
@@ -183,6 +189,7 @@ Page({
       },
       header: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
         "Cookie": "JSESSIONID=" + that.data.sessionId
       },
       success: function (res) {

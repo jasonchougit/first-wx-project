@@ -1,4 +1,4 @@
-<!--server.wxml-->
+<!--div.wxml-->
 <view class="container">
   <view class="header-area">
     <view class="header-area-img">

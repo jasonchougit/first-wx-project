@@ -1,4 +1,4 @@
-// server.js
+// tma.js
 var app = getApp();
 Page({
 
@@ -101,8 +101,6 @@ Page({
         console.log("res");
         console.log(res);
         var serverItem = {};
-        //注：这里equipmentId与传入参数equipmentId: serialNumber不同
-        serverItem.equipmentId = res.data.equipmentId || '';
         serverItem.idcName = res.data.idcName || '';
         serverItem.idcId = res.data.idcId || '';
         serverItem.rack = res.data.rack || '';
@@ -168,9 +166,9 @@ Page({
           }
         }
         d.value = envname;
-      }else{
+      } else {
         d.value = serverItem[d.index];
-      } 
+      }
     });
 
     that.setData({
@@ -210,9 +208,9 @@ Page({
     }
   },
 
-/**
- * 根据project_id获取idc机房列表
- */
+  /**
+   * 根据project_id获取idc机房列表
+   */
   getIdcList: function (projectOption) {
     var that = this;
     var curProjectid = projectOption.curProjectid;
@@ -221,8 +219,8 @@ Page({
     wx.request({
       url: 'https://pmweb.haohandata.com:8181/pmweb/api/idc/equipment',
       data: {
-        project_id: curProjectid
-        //project_id: 22
+        //project_id: curProjectid
+        project_id: 22
       },
       header: {
         "Content-Type": "application/json"
@@ -255,9 +253,9 @@ Page({
     });
   },
 
-/**
- * 根据所选机房idc_id获取机架列表
- */
+  /**
+   * 根据所选机房idc_id获取机架列表
+   */
   getRackList: function (projectOption) {
     var that = this;
     var serverItem = that.data.curServerItem;
@@ -265,8 +263,8 @@ Page({
     wx.request({
       url: 'https://pmweb.haohandata.com:8181/pmweb/api/rack/idc',
       data: {
-        idc_id: curIdcId
-        //idc_id: 23
+        //idc_id: curIdcId
+        idc_id: 23
       },
       header: {
         "Content-Type": "application/json"
@@ -296,9 +294,9 @@ Page({
     });
   },
 
-/**
- * 获取部署链路列表(多选)
- */
+  /**
+   * 获取部署链路列表(多选)
+   */
   getEnvList: function (projectOption) {
     var that = this;
     var serverItem = that.data.curServerItem;
@@ -322,14 +320,14 @@ Page({
         envList.map(function (d) {
           var len = serverItem.envName.length;
           var c = 0;
-          for (var i=0; i<len; i++) {
+          for (var i = 0; i < len; i++) {
             if (d.name === serverItem.envName[i]) {
               c = 1;
             }
           }
           if (c > 0) {
             d.checked = true;
-          }else{
+          } else {
             d.checked = false;
           }
         });
@@ -343,9 +341,9 @@ Page({
     });
   },
 
-/**
- * 获取设备状态列表
- */
+  /**
+   * 获取设备状态列表
+   */
   getStatusList: function (projectOption) {
     var that = this;
     var serverItem = that.data.curServerItem;
@@ -380,9 +378,9 @@ Page({
     });
   },
 
-/**
- * 获取服务器角色列表
- */
+  /**
+   * 获取服务器角色列表
+   */
   getRoleList: function (projectOption) {
     var that = this;
     var serverItem = that.data.curServerItem;
@@ -420,7 +418,7 @@ Page({
     var that = this;
     var listName = item.listName;
     var listKey = item.listKey;
-  
+
     if (listName === 'envList') {
       that.setData({
         modalTitle: '选择' + listKey,
@@ -479,60 +477,19 @@ Page({
     });
     console.log("envOption");
     console.log(envOption);
-
+    
     that.data.curServerItem.envName = envOption;
     that.data.roleList.forEach(function (d) {
       if (d.checked) {
         that.data.curServerItem.role = d.name;
       }
     });
-    //wx.setStorageSync("serverInfo", that.data.curServerItem);
-    var equipmentId = that.data.curServerItem.equipmentId;
-    that.putServerInfo(equipmentId);
+    wx.setStorageSync("serverInfo", that.data.curServerItem);
     that.refreshAttrList(that.data.curServerItem);
     that.setData({
       modalHidden: true
     });
   },
-/**
- * 修改数据
- */
-  putServerInfo: function (equipmentId) {
-    console.log("start");
-    var that = this;
-    var rack = that.data.curServerItem.rack;
-    var status = that.data.curServerItem.status;
-    var statusTransMap = {
-      '在用': 1,
-      '待用': 2,
-      '未用': 3,
-      '下线': 4,
-      '代理': 5
-    };
-    var statusId = statusTransMap[status];
-    console.log("statusId");
-    console.log(statusId);
-    console.log(status);
-    wx.request({
-      url: 'https://pmweb.haohandata.com:8181/pmweb/api/equipment/37435',
-      data: {
-        rack: rack,
-        statusId: statusId
-      },
-      header: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      method: 'PUT',
-      success: function () {
-        console.log("success");
-      },
-      fail: function () {
-        console.log("error");
-      }
-    })
-  },
-
   /**
    * 模态框取消按钮操作
    */
@@ -567,6 +524,7 @@ Page({
     var temp1 = e.detail.value
     console.log("temp1");
     console.log(temp1)
+    //var temp2 = ''
     if (temp1.length > 0) {
       that.data.envList.map(function (d) {
         var a = 0;
@@ -583,7 +541,7 @@ Page({
       })
       console.log("that.data.envList");
       console.log(that.data.envList);
-    }else{
+    } else {
       that.data.envList.map(function (d) {
         d.checked = false;
       });
@@ -591,4 +549,3 @@ Page({
   }
 
 })
-
