@@ -10,7 +10,10 @@
     "pages/env/env",
     "pages/idc/idc",
     "pages/equipment/equipment-add",
-    "pages/equipment/server"
+    "pages/equipment/server",
+    "pages/equipment/tma",
+    "pages/equipment/div",
+    "pages/equipment/switch"
   ],
   "window": {
     "backgroundTextStyle": "light",
